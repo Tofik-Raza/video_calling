@@ -6,7 +6,7 @@ import socketio
 sio = socketio.Client()
 
 # Server IP and port
-server_url = "http://your_server_ip:5000"
+server_url = "https://video-calling-0lkd.onrender.com"
 
 @sio.event
 def connect():
