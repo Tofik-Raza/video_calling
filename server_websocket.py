@@ -6,7 +6,8 @@ from waitress import serve
 
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*")  # Allow all origins for testing
+socketio = SocketIO(app, cors_allowed_origins=["https://your-frontend-url.vercel.app"])
+ # Allow all origins for testing
 
 @app.route("/")
 def index():
@@ -21,7 +22,10 @@ def handle_frame(data):
         nparr = np.frombuffer(frame_bytes, np.uint8)
         frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
-        # Display the received frame
+        # Broadcast frame back to all clients
+        emit("receive_frame", {"frame": data}, broadcast=True)
+        
+        # Display the frame on the server for debugging
         if frame is not None:
             cv2.imshow("Server Video", frame)
             if cv2.waitKey(1) == 27:  # Press 'Esc' to exit
@@ -29,6 +33,7 @@ def handle_frame(data):
                 socketio.stop()
     except Exception as e:
         print("Error:", e)
+
 
 if __name__ == "__main__":
     print("Starting production server...")
