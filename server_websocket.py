@@ -2,6 +2,8 @@ from flask import Flask, Response
 from flask_socketio import SocketIO, emit
 import cv2
 import base64
+from waitress import serve
+
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")  # Allow all origins for testing
@@ -29,4 +31,5 @@ def handle_frame(data):
         print("Error:", e)
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=5000)
+    print("Starting production server...")
+    serve(app, host="0.0.0.0", port=5000)
